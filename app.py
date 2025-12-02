@@ -652,101 +652,131 @@ def clean_json(data: Union[Dict, List, str]) -> Union[Dict, List, str]:
 
 
 # ---------------- Parser ----------------
-def parse_medical_report(text: str):
-    """
-    Parses Gemini markdown response → structured JSON.
-    Detects section headers, **bold keys**, and table entries.
-    """
-    def clean_line(line: str) -> str:
-        return re.sub(r"[\-\*\u2022]+\s*", "", line.strip())
+import re
 
-    def parse_bold_entities(block: str) -> Dict[str, str]:
-        """Extracts **bold** entities and maps text until next bold or section."""
-        entities = {}
-        pattern = re.compile(r"\*\*(.*?)\*\*(.*?)(?=\*\*|###|$)", re.S)
-        for match in pattern.finditer(block):
-            key = match.group(1).strip().strip(":")
-            val = match.group(2).strip().replace("\n", " ")
-            val = re.sub(r"\s+", " ", val)
-            if key:
-                entities[key] = val
-        return entities
+def clean_line(t):
+    return t.strip().replace("**", "").replace("###", "").strip()
+
+def extract_status_and_explanation(block):
+    status = ""
+    explanation = ""
+
+    status_match = re.search(r"Status:\s*(.*?)(?:\s*Explanation:|$)", block, re.S | re.I)
+    exp_match = re.search(r"Explanation:\s*(.*)", block, re.S | re.I)
+
+    if status_match:
+        status = clean_line(status_match.group(1))
+    if exp_match:
+        explanation = clean_line(exp_match.group(1))
+
+    return status, explanation
+
+
+def parse_medical_report(text):
 
     data = {
-        "executive_summary": {"top_priorities": [], "key_strengths": []},
-        "system_analysis": {},
-        "personalized_action_plan": {},
+        "executive_summary": {
+            "top_health_priorities": [],
+            "key_strengths": []
+        },
+        "system_analysis": {
+            "kidney_function_test": {"status": "", "explanation": ""},
+            "basic_checkup_cbc_hematology": {"status": "", "explanation": ""},
+            "hormone_profile_comprehensive": {"status": "", "explanation": ""},
+            "liver_function_test": {"status": "", "explanation": ""},
+            "diabetic_profile": {"status": "", "explanation": ""},
+            "lipid_profile": {"status": "", "explanation": ""},
+            "cardiac_profile": {"status": "", "explanation": ""},
+            "mineral_heavy_metal": {"status": "", "explanation": ""},
+            "iron_profile": {"status": "", "explanation": ""},
+            "bone_health": {"status": "", "explanation": ""},
+            "vitamins": {"status": "", "explanation": ""},
+            "thyroid_profile": {"status": "", "explanation": ""},
+            "adrenal_stress_hormones": {"status": "", "explanation": ""},
+            "blood_marker_cancer_profile": {"status": "", "explanation": ""},
+            "immune_profile": {"status": "", "explanation": ""}
+        },
+        "personalized_action_plan": {
+            "nutrition": "",
+            "lifestyle": "",
+            "testing": "",
+            "medical_consultation": ""
+        },
         "interaction_alerts": []
     }
 
-    # --- Executive Summary ---
+    # ---------------------------
+    # --- EXECUTIVE SUMMARY ----
+    # ---------------------------
     exec_match = re.search(r"###\s*Executive Summary(.*?)(?=###|$)", text, re.S | re.I)
     if exec_match:
         block = exec_match.group(1)
-        priorities = re.findall(r"\d+\.\s*(.*?)\n", block)
-        if priorities:
-            data["executive_summary"]["top_priorities"] = [clean_line(p) for p in priorities]
-        strengths_match = re.search(r"\*\*Key Strengths:\*\*(.*)", block, re.S)
-        if strengths_match:
-            strengths_text = strengths_match.group(1)
-            strengths = [clean_line(s) for s in strengths_text.splitlines() if clean_line(s)]
-            data["executive_summary"]["key_strengths"] = strengths
 
-    # --- System Analysis ---
-    sys_match = re.search(r"###\s*System[- ]Specific Analysis(.*?)(?=###|$)", text, re.S | re.I)
+        # Priorities (1., 2., 3.)
+        priorities = re.findall(r"\d+\.\s*(.*)", block)
+        data["executive_summary"]["top_health_priorities"] = [clean_line(p) for p in priorities]
+
+        # Key strengths (- ...)
+        strengths = re.findall(r"-\s*(.*)", block)
+        data["executive_summary"]["key_strengths"] = [clean_line(s) for s in strengths]
+
+
+    # ----------------------------
+    # --- SYSTEM SPECIFIC BLOCK --
+    # ----------------------------
+    sys_match = re.search(r"###\s*System-Specific Analysis(.*?)(?=###|$)", text, re.S | re.I)
     if sys_match:
         sys_block = sys_match.group(1)
-        data["system_analysis"] = parse_bold_entities(sys_block)
 
-    # --- Personalized Action Plan ---
+        # Map headings → your JSON keys
+        heading_map = {
+            r"Hormone Profile": "hormone_profile_comprehensive",
+            r"Kidney Function Test": "kidney_function_test",
+            r"Basic Check-up": "basic_checkup_cbc_hematology",
+            r"Liver Function Test": "liver_function_test",
+            r"Diabetic Profile": "diabetic_profile",
+            r"Lipid Profile": "lipid_profile",
+            r"Cardiac Profile": "cardiac_profile",
+            r"Mineral & Heavy Metal": "mineral_heavy_metal",
+            r"Iron Profile": "iron_profile",
+            r"Bone Health": "bone_health",
+            r"Vitamins": "vitamins",
+            r"Thyroid Profile": "thyroid_profile",
+            r"Adrenal Function": "adrenal_stress_hormones",
+            r"Blood Marker Cancer Profile": "blood_marker_cancer_profile",
+            r"Immune Profile": "immune_profile"
+        }
+
+        for pattern, key in heading_map.items():
+            match = re.search(rf"\*\*{pattern}.*?\*\*(.*?)(?=\*\*|$)", sys_block, re.S | re.I)
+            if match:
+                block = match.group(1)
+                status, explanation = extract_status_and_explanation(block)
+                data["system_analysis"][key]["status"] = status
+                data["system_analysis"][key]["explanation"] = explanation
+
+
+    # ----------------------------
+    # --- ACTION PLAN ------------
+    # ----------------------------
     plan_match = re.search(r"###\s*Personalized Action Plan(.*?)(?=###|$)", text, re.S | re.I)
     if plan_match:
         plan_block = plan_match.group(1)
-        data["personalized_action_plan"] = parse_bold_entities(plan_block)
 
-    # --- Interaction Alerts ---
-    alerts_match = re.search(r"###\s*Interaction Alerts(.*?)(?=###|$)", text, re.S | re.I)
-    if alerts_match:
-        alerts_block = alerts_match.group(1)
-        alerts = [clean_line(a) for a in alerts_block.splitlines() if clean_line(a)]
-        data["interaction_alerts"] = alerts
+        for field in ["nutrition", "lifestyle", "testing", "medical_consultation"]:
+            m = re.search(rf"\*\*{field.capitalize().replace('_',' ')}:\*\*\s*(.*)", plan_block, re.I)
+            if m:
+                data["personalized_action_plan"][field] = clean_line(m.group(1))
 
-    # --- Tabular Mapping ---
-    table_match = re.search(r"###\s*Tabular Mapping(.*)", text, re.S | re.I)
-    if table_match:
-        table_block = table_match.group(1)
-        # robust row matcher: capture any table rows with 5 pipe-separated columns
-        table_pattern = r"\|\s*([^|]+)\s*\|\s*([^|]+)\s*\|\s*([^|]+)\s*\|\s*([^|]+)\s*\|\s*([^|]+)\s*\|"
-        for biomarker, value, status, insight, ref in re.findall(table_pattern, table_block):
-            # normalize
-            biomarker_s = biomarker.strip()
-            value_s = value.strip()
-            status_s = status.strip()
-            insight_s = insight.strip()
-            ref_s = ref.strip()
 
-            # ---------- ONLY SKIP rows where ALL five fields are empty ----------
-            # if not any([biomarker_s, value_s, status_s, insight_s, ref_s]):
-            #     # This is the empty-row you showed: skip it and continue
-            #     continue
-
-            # ---------- ALSO SKIP rows that are pure separator artifacts ----------
-            # e.g., ":-----------" or "--------" in biomarker column (common AI artifacts)
-            def is_separator_cell(s: str) -> bool:
-                # treat as separator if contains no alphanumeric chars
-                return not bool(re.search(r"[A-Za-z0-9]", s))
-
-            # if all(is_separator_cell(c) for c in [biomarker_s, value_s, status_s, insight_s, ref_s]):
-            #     continue
-
-            # ---------- Append the cleaned/valid row ----------
-            data["biomarker_table"].append({
-                "biomarker": biomarker_s,
-                "value": value_s,
-                "status": status_s,
-                "insight": insight_s,
-                "reference_range": ref_s,
-            })
+    # ----------------------------
+    # --- INTERACTION ALERTS -----
+    # ----------------------------
+    alert_match = re.search(r"###\s*Interaction Alerts(.*)", text, re.S | re.I)
+    if alert_match:
+        a_block = alert_match.group(1)
+        alerts = re.findall(r"-\s*(.*)", a_block)
+        data["interaction_alerts"] = [clean_line(a) for a in alerts]
 
     return data
 
