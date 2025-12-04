@@ -642,7 +642,7 @@ def clean_json(data: Union[Dict, List, str]) -> Union[Dict, List, str]:
     if isinstance(data, str):
         text = re.sub(r"-{3,}", "", data)
         text = re.sub(r"\s+", " ", text)
-        text = text.strip(" -\n\t\r")
+        # text = text.strip(" -\n\t\r")
         return text
     elif isinstance(data, list):
         return [clean_json(i) for i in data if i and clean_json(i)]
@@ -658,7 +658,7 @@ def parse_medical_report(text: str):
     Detects section headers, **bold keys**, and table entries.
     """
     def clean_line(line: str) -> str:
-        return re.sub(r"[\-\*\u2022]+\s*", "", line.strip())
+        return re.sub(r"^[\-\*\u2022]+\s*", "", line.strip())
 
     def parse_bold_entities(block: str) -> Dict[str, str]:
         """Extracts **bold** entities and maps text until next bold or section."""
@@ -789,8 +789,8 @@ def predict(data: BiomarkerRequest):
     try:
         # --- Prompt Template ---
         prompt = """
-You are an advanced **Medical Insight Generation AI** trained to analyze **biomarkers and lab results**.
 ------------------------------
+
 CRITICAL FORMATTING RULES - YOU MUST FOLLOW EXACTLY:
 
 When mentioning any reference range in the entire response, ALWAYS write it exactly like this:
@@ -905,6 +905,5 @@ make it detailed
         return cleaned_output
 
     except Exception as e:
-
 
         raise HTTPException(status_code=500, detail=f"Prediction error: {str(e)}")
