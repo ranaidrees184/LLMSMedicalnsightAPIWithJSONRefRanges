@@ -809,6 +809,13 @@ When mentioning any reference range in the entire response, ALWAYS write it exac
 
 Do NOT write: 030 pg/mL, 0.090.78 ng/mL, 1060 mIU/mL, 0 - 30, 0–30 (wrong dash), etc.
 
+1. NEVER repeat the same paragraph or sentence across different sections.
+2. "top_priorities" must contain ONLY serious abnormalities that require urgent medical attention.
+3. "key_strengths" must contain ONLY excellent/optimal results.
+
+Violation of these rules will make the report confusing and medically dangerous.
+Be extremely disciplined about content separation.
+
 This is extremely important for medical accuracy and parsing. Follow this rule everywhere in your response.
 
 ### Executive Summary
@@ -908,3 +915,4 @@ make it detailed
 
 
         raise HTTPException(status_code=500, detail=f"Prediction error: {str(e)}")
+
