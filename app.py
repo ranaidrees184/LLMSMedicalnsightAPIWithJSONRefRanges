@@ -812,7 +812,7 @@ Do NOT write: 030 pg/mL, 0.090.78 ng/mL, 1060 mIU/mL, 0 - 30, 0–30 (wrong dash
 This is extremely important for medical accuracy and parsing. Follow this rule everywhere in your response.
 
 ### Executive Summary
-**Top  Health Priorities:**
+**Top 3 Health Priorities:**
 1. ...
 2. ...
 3. ...
@@ -905,5 +905,6 @@ make it detailed
         return cleaned_output
 
     except Exception as e:
+
 
         raise HTTPException(status_code=500, detail=f"Prediction error: {str(e)}")
