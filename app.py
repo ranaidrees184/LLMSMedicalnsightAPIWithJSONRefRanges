@@ -752,7 +752,7 @@ data["executive_summary"]["key_strengths"] = key_strengths
 
     # --- System Analysis ---
     # --- System Analysis (Fixed Keys) ---
-    sys_match = re.search(r"###\s*System[- ]Specific Analysis(.*?)(?=###|$)", text, re.S | re.I)
+    sys_match = re.search(r"###\s*System[- ]Specific Analysis(.*?)((?=###)|$)", text, re.S | re.I)
     if sys_match:
         sys_block = sys_match.group(1)
 
@@ -953,6 +953,7 @@ make it detailed
 
 
         raise HTTPException(status_code=500, detail=f"Prediction error: {str(e)}")
+
 
 
 
