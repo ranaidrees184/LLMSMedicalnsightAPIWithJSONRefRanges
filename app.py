@@ -791,14 +791,18 @@ def predict(data: BiomarkerRequest):
         prompt = """
 ------------------------------
 CRITICAL INSTRUCTION — READ FIRST AND OBEY 100%:
+TOP_PRIORITIES RULE — OBEY EXACTLY OR THE REPORT IS INVALID:
 
-"top_priorities" must contain EXACTLY 3 items.
-Each item MUST start with the word CRITICAL or URGENT.
-Each item MUST describe a finding that is at least 5× outside its reference range OR classically life-threatening (e.g. CK-MB >3× ULN, Testosterone >10×, IgG >50×, Total T3 >60×, etc.).
-NEVER include any normal or optimal result in top_priorities — this is medically dangerous and forbidden.
-Normal glucose, lipids, CBC, vitamins, calcium, ALT/AST, etc. are NEVER priorities.
-If fewer than 3 critical abnormalities exist, write only the real ones — never pad the list.
-Violation will harm patients.
+"top_priorities" must be EXACTLY 3 items and NOTHING else.
+Every item MUST begin with "CRITICAL:" (including the colon).
+Only include findings that are ≥10× outside reference range OR classically life-threatening.
+Examples of allowed items in this specific report:
+- CRITICAL: Total Testosterone 450 ng/dL (ref: 12-36 ng/dL)
+- CRITICAL: Total T3 120 ng/mL (ref: 0.35-1.93 ng/mL)
+- CRITICAL: IgG 1200 g/L (ref: 7-16 g/L)
+
+ANY item that does NOT start with "CRITICAL:" will be rejected.
+ANY 4th item or any normal/optimal result = automatic failure.
 
 When mentioning any reference range in the entire response, ALWAYS write it exactly like this:
 - Use a hyphen (-) between numbers, NO space around it
@@ -914,6 +918,7 @@ make it detailed
 
 
         raise HTTPException(status_code=500, detail=f"Prediction error: {str(e)}")
+
 
 
 
