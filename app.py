@@ -790,11 +790,17 @@ def predict(data: BiomarkerRequest):
         # --- Prompt Template ---
         prompt = """
 ------------------------------
+CRITICAL INSTRUCTION — READ FIRST AND OBEY 100%:
 
-CRITICAL FORMATTING RULES - YOU MUST FOLLOW EXACTLY:
+"top_priorities" must contain EXACTLY 3 items.
+Each item MUST start with the word CRITICAL or URGENT.
+Each item MUST describe a finding that is at least 5× outside its reference range OR classically life-threatening (e.g. CK-MB >3× ULN, Testosterone >10×, IgG >50×, Total T3 >60×, etc.).
+NEVER include any normal or optimal result in top_priorities — this is medically dangerous and forbidden.
+Normal glucose, lipids, CBC, vitamins, calcium, ALT/AST, etc. are NEVER priorities.
+If fewer than 3 critical abnormalities exist, write only the real ones — never pad the list.
+Violation will harm patients.
 
 When mentioning any reference range in the entire response, ALWAYS write it exactly like this:
-
 - Use a hyphen (-) between numbers, NO space around it
 - Never concatenate numbers (030 instead of 0-30)
 - Never write 0.090.78 — always 0.09-0.78
@@ -808,12 +814,6 @@ When mentioning any reference range in the entire response, ALWAYS write it exac
   → ref: >60 mL/min/1.73m²
 
 Do NOT write: 030 pg/mL, 0.090.78 ng/mL, 1060 mIU/mL, 0 - 30, 0–30 (wrong dash), etc.
-
-1. NEVER repeat the same paragraph or sentence across different sections.
-2. "top_priorities" must contain ONLY serious 3 top abnormalities that require urgent medical attention.
-
-Violation of these rules will make the report confusing and medically dangerous.
-Be extremely disciplined about content separation.
 
 This is extremely important for medical accuracy and parsing. Follow this rule everywhere in your response.
 
@@ -914,5 +914,6 @@ make it detailed
 
 
         raise HTTPException(status_code=500, detail=f"Prediction error: {str(e)}")
+
 
 
