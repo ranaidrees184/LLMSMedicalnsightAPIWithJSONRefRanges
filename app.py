@@ -795,8 +795,7 @@ CRITICAL INSTRUCTION — READ FIRST AND OBEY 100%:
 Every item MUST begin with "CRITICAL:" (including the colon).
 Only include findings that are ≥10× outside reference range OR classically life-threatening.
 Examples of allowed items in this specific report:
-- CRITICAL: Total Testosterone 450 ng/dL (ref: 12-36 ng/dL)
-- CRITICAL: Total T3 120 ng/mL (ref: 0.35-1.93 ng/mL)
+- CRITICAL: Total Testosterone 450 ng/dL (ref: 12-36 ng/dL) with short Description.
 
 When mentioning any reference range in the entire response, ALWAYS write it exactly like this:
 - Use a hyphen (-) between numbers, NO space around it
@@ -907,6 +906,7 @@ make it detailed
 
 
         raise HTTPException(status_code=500, detail=f"Prediction error: {str(e)}")
+
 
 
 
