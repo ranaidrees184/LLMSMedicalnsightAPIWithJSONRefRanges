@@ -791,11 +791,12 @@ def predict(data: BiomarkerRequest):
         prompt = """
 ------------------------------
 CRITICAL INSTRUCTION — READ FIRST AND OBEY 100%:
-TOP_PRIORITIES RULE — OBEY EXACTLY OR THE REPORT IS INVALID:
-
 "top_priorities" must be EXACTLY 3 items and NOTHING else.
-ANY item that does NOT start with "CRITICAL:" will be rejected.
-ANY 4th item or any normal/optimal result = automatic failure.
+Every item MUST begin with "CRITICAL:" (including the colon).
+Only include findings that are ≥10× outside reference range OR classically life-threatening.
+Examples of allowed items in this specific report:
+- CRITICAL: Total Testosterone 450 ng/dL (ref: 12-36 ng/dL)
+- CRITICAL: Total T3 120 ng/mL (ref: 0.35-1.93 ng/mL)
 
 When mentioning any reference range in the entire response, ALWAYS write it exactly like this:
 - Use a hyphen (-) between numbers, NO space around it
@@ -804,11 +805,6 @@ When mentioning any reference range in the entire response, ALWAYS write it exac
 - Always include the unit after a space
 - Examples you MUST copy exactly:
   → ref: 0-30 pg/mL
-  → ref: 10-60 mIU/mL
-  → ref: 16-120 mIU/mL
-  → ref: 0.09-0.78 ng/mL
-  → ref: <35 U/mL
-  → ref: >60 mL/min/1.73m²
 
 Do NOT write: 030 pg/mL, 0.090.78 ng/mL, 1060 mIU/mL, 0 - 30, 0–30 (wrong dash), etc.
 
