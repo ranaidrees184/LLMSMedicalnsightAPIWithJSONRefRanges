@@ -821,6 +821,12 @@ Do NOT write: 030 pg/mL, 0.090.78 ng/mL, 1060 mIU/mL, 0 - 30, 0–30 (wrong dash
 
 This is extremely important for medical accuracy and parsing. Follow this rule everywhere in your response.
 
+NO LISTS ALLOWED IN JSON:
+- Never start any string with "1.", "2.", "3.", "-", "•", or any bullet/number
+- "Nutrition", "Lifestyle", "Testing", "Medical Consultation" must be plain paragraphs only
+- Write everything as normal sentences, no numbering or bullets anywhere
+- Wrong: "1. Do this 2. Do that" → Correct: "Do this and that immediately."
+
 ### Executive Summary
 **Top 3 Health Priorities:**
 1. ...
@@ -918,6 +924,7 @@ make it detailed
 
 
         raise HTTPException(status_code=500, detail=f"Prediction error: {str(e)}")
+
 
 
 
