@@ -821,12 +821,6 @@ Do NOT write: 030 pg/mL, 0.090.78 ng/mL, 1060 mIU/mL, 0 - 30, 0–30 (wrong dash
 
 This is extremely important for medical accuracy and parsing. Follow this rule everywhere in your response.
 
-NO LISTS ALLOWED IN JSON:
-- Never start any string with "1.", "2.", "3.", "-", "•", or any bullet/number
-- "Nutrition", "Lifestyle", "Testing", "Medical Consultation" must be plain paragraphs only
-- Write everything as normal sentences, no numbering or bullets anywhere
-- Wrong: "1. Do this 2. Do that" → Correct: "Do this and that immediately."
-
 ### Executive Summary
 **Top 3 Health Priorities:**
 1. ...
@@ -886,6 +880,12 @@ Status: Normal. Explanation: CEA, CA19-9, CA125, CA15-3, AFP, PSA (men), HE4, RO
 **Immune Profile**
 Status: Normal. Explanation: Immunoglobulin levels (IgG, IgA, IgM, IgE), ANA, ENA panel, Anti-dsDNA, Anti-CCP, ANCA, Complement C3/C4, IL-6, and lymphocyte subsets (if tested) are within normal limits, indicating competent humoral and cellular immunity with no evidence of immunodeficiency, active autoimmunity, or chronic inflammatory states.------------------------------
 
+NO LISTS ALLOWED IN JSON:
+- Never start any string with "1.", "2.", "3.", "-", "•", or any bullet/number
+- "Nutrition", "Lifestyle", "Testing", "Medical Consultation" must be plain paragraphs only
+- Write everything as normal sentences, no numbering or bullets anywhere
+- Wrong: "1. Do this 2. Do that" → Correct: "Do this and that immediately."
+
 ### Personalized Action Plan
 **Nutrition:** ...
 make it detailed
@@ -924,6 +924,7 @@ make it detailed
 
 
         raise HTTPException(status_code=500, detail=f"Prediction error: {str(e)}")
+
 
 
 
