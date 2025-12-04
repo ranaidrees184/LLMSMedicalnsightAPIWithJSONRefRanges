@@ -791,6 +791,26 @@ def predict(data: BiomarkerRequest):
         prompt = """
 You are an advanced **Medical Insight Generation AI** trained to analyze **biomarkers and lab results**.
 ------------------------------
+CRITICAL FORMATTING RULES - YOU MUST FOLLOW EXACTLY:
+
+When mentioning any reference range in the entire response, ALWAYS write it exactly like this:
+
+- Use a hyphen (-) between numbers, NO space around it
+- Never concatenate numbers (030 instead of 0-30)
+- Never write 0.090.78 — always 0.09-0.78
+- Always include the unit after a space
+- Examples you MUST copy exactly:
+  → ref: 0-30 pg/mL
+  → ref: 10-60 mIU/mL
+  → ref: 16-120 mIU/mL
+  → ref: 0.09-0.78 ng/mL
+  → ref: <35 U/mL
+  → ref: >60 mL/min/1.73m²
+
+Do NOT write: 030 pg/mL, 0.090.78 ng/mL, 1060 mIU/mL, 0 - 30, 0–30 (wrong dash), etc.
+
+This is extremely important for medical accuracy and parsing. Follow this rule everywhere in your response.
+
 ### Executive Summary
 **Top  Health Priorities:**
 1. ...
@@ -885,5 +905,6 @@ make it detailed
         return cleaned_output
 
     except Exception as e:
+
 
         raise HTTPException(status_code=500, detail=f"Prediction error: {str(e)}")
