@@ -795,6 +795,7 @@ CRITICAL INSTRUCTION — READ FIRST AND OBEY 100%:
 Every item MUST begin with "CRITICAL:" (including the colon).
 Only include findings that are ≥10× outside reference range OR classically life-threatening.
 Don't Repeat any paragrapgh or sentence in any section.
+Do NOT include in "top_priorities" any finding that is already presented as a strength in "key_strengths". A result can appear in only one section. If a value reflects optimal health, it must NOT be listed as a priority. If a value reflects a critical abnormality, it must NOT be listed as a strength.
 
 When mentioning any reference range in the entire response, ALWAYS write it exactly like this:
 - Use a hyphen (-) between numbers, NO space around it
@@ -905,6 +906,7 @@ make it detailed
 
 
         raise HTTPException(status_code=500, detail=f"Prediction error: {str(e)}")
+
 
 
 
