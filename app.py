@@ -699,18 +699,56 @@ def parse_medical_report(text: str):
     }
 
 
-    # --- Executive Summary ---
-    exec_match = re.search(r"###\s*Executive Summary(.*?)(?=###|$)", text, re.S | re.I)
-    if exec_match:
-        block = exec_match.group(1)
-        priorities = re.findall(r"\d+\.\s*(.*?)\n", block)
-        if priorities:
-            data["executive_summary"]["top_priorities"] = [clean_line(p) for p in priorities]
-        strengths_match = re.search(r"\*\*Key Strengths:\*\*(.*)", block, re.S)
-        if strengths_match:
-            strengths_text = strengths_match.group(1)
-            strengths = [clean_line(s) for s in strengths_text.splitlines() if clean_line(s)]
-            data["executive_summary"]["key_strengths"] = strengths
+    # 1. Extract the entire Executive Summary block
+exec_match = re.search(r"###\s*Executive Summary\s*(.*?)(?=###|$)", text, re.S | re.I)
+if not exec_match:
+    return
+
+block = exec_match.group(1)
+
+# 2. Extract Top 3 Health Priorities with full detailed text
+priority_section = re.search(r"\*\*Top 3 Health Priorities:\*\*(.*?)(?=\*\*Key Strengths:|\*\*|$)", block, re.S | re.I)
+top_priorities = []
+
+if priority_section:
+    sect = priority_section.group(1)
+    # Find each numbered priority (1., 2., 3.) and capture everything until the next number or Key Strengths
+    items = re.split(r'\n\s*(\d+\.)\s', '\n' + sect)[1:]  # prepend \n to make split clean
+    for i in range(0, len(items), 2):
+        if i+1 < len(items):
+            number = items[i].strip()
+            content = items[i+1].strip()
+            # If the content is short (just the title), try to grab the following paragraph(s)
+            if re.match(r'^\d+\.', number):
+                full_text = content
+                # If the next priority starts, stop; otherwise keep going
+                next_priority = re.search(r'\n\s*\d+\.', '\n' + content + '\n')
+                if next_priority:
+                    full_text = content[:next_priority.start()]
+                top_priorities.append(clean_line(full_text))
+    
+    # Alternative simpler & very reliable method (recommended):
+    # Split on lines that look like "1. ", "2. ", "3. "
+    top_priorities = []
+    matches = re.finditer(r"(^\d+\.\s*)(.*?)(?=^\d+\.|(?=\*\*Key Strengths:)|$)", sect, re.S | re.M)
+    for m in matches:
+        priority_text = m.group(2).strip()
+        if priority_text:
+            top_priorities.append(clean_line(priority_text))
+
+# 3. Extract Key Strengths (bullet points with full detail)
+strengths_section = re.search(r"\*\*Key Strengths:\*\*(.*?)(?=\*\*|$)", block, re.S | re.I)
+key_strengths = []
+
+if strengths_section:
+    sect = strengths_section.group(1)
+    # Split on lines that start with - or • or *
+    bullets = re.split(r'\n\s*[-•*]\s+', '\n' + sect)[1:]
+    key_strengths = [clean_line(b) for b in bullets if clean_line(b)]
+
+# Store in data
+data["executive_summary"]["top_priorities"] = top_priorities[:3]  # enforce max 3
+data["executive_summary"]["key_strengths"] = key_strengths
 
     # --- System Analysis ---
     # --- System Analysis (Fixed Keys) ---
@@ -915,6 +953,7 @@ make it detailed
 
 
         raise HTTPException(status_code=500, detail=f"Prediction error: {str(e)}")
+
 
 
 
