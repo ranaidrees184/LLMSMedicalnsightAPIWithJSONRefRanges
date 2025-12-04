@@ -805,8 +805,6 @@ When mentioning any reference range in the entire response, ALWAYS write it exac
 - Examples you MUST copy exactly:
   → ref: 0-30 pg/mL
 
-Do NOT write: 030 pg/mL, 0.090.78 ng/mL, 1060 mIU/mL, 0 - 30, 0–30 (wrong dash), etc.
-
 This is extremely important for medical accuracy and parsing. Follow this rule everywhere in your response.
 
 ### Executive Summary
@@ -906,6 +904,7 @@ make it detailed
 
 
         raise HTTPException(status_code=500, detail=f"Prediction error: {str(e)}")
+
 
 
 
