@@ -790,12 +790,11 @@ def predict(data: BiomarkerRequest):
         # --- Prompt Template ---
         prompt = """
 ------------------------------
-CRITICAL INSTRUCTION — READ FIRST AND OBEY 100%:
-"top_priorities" must be EXACTLY 3 items and NOTHING else.
-Every item MUST begin with "CRITICAL:" (including the colon).
-Only include findings that are ≥10× outside reference range OR classically life-threatening.
-Don't Repeat any paragrapgh or sentence in any section.
-Do not allow any overlap between "top_priorities" and "key_strengths". A finding can only appear in one section. If a parameter is included in "top_priorities", automatically exclude it and all related wording from "key_strengths". If a parameter is included in "key_strengths", automatically exclude it and all related wording from "top_priorities". Always perform this filtering step before writing.
+You are a medical summarization engine. You must strictly follow all rules.
+First: extract candidates internally without outputting them.
+Second: perform filtering to avoid overlap.
+Third: produce the JSON output.
+Never repeat any medical finding across sections.
 
 When mentioning any reference range in the entire response, ALWAYS write it exactly like this:
 - Use a hyphen (-) between numbers, NO space around it
@@ -904,6 +903,7 @@ make it detailed
 
 
         raise HTTPException(status_code=500, detail=f"Prediction error: {str(e)}")
+
 
 
 
