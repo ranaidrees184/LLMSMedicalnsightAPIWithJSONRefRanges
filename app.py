@@ -794,8 +794,7 @@ CRITICAL INSTRUCTION — READ FIRST AND OBEY 100%:
 "top_priorities" must be EXACTLY 3 items and NOTHING else.
 Every item MUST begin with "CRITICAL:" (including the colon).
 Only include findings that are ≥10× outside reference range OR classically life-threatening.
-Examples of allowed items in this specific report:
-- CRITICAL: Total Testosterone 450 ng/dL (ref: 12-36 ng/dL) with short Description.
+Don't Repeat any paragrapgh or sentence in any section.
 
 When mentioning any reference range in the entire response, ALWAYS write it exactly like this:
 - Use a hyphen (-) between numbers, NO space around it
@@ -906,6 +905,7 @@ make it detailed
 
 
         raise HTTPException(status_code=500, detail=f"Prediction error: {str(e)}")
+
 
 
 
