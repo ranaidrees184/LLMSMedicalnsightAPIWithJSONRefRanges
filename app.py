@@ -642,7 +642,7 @@ def clean_json(data: Union[Dict, List, str]) -> Union[Dict, List, str]:
     if isinstance(data, str):
         text = re.sub(r"-{3,}", "", data)
         text = re.sub(r"\s+", " ", text)
-        # text = text.strip(" -\n\t\r")
+        text = text.strip(" -\n\t\r")
         return text
     elif isinstance(data, list):
         return [clean_json(i) for i in data if i and clean_json(i)]
@@ -658,7 +658,7 @@ def parse_medical_report(text: str):
     Detects section headers, **bold keys**, and table entries.
     """
     def clean_line(line: str) -> str:
-        return re.sub(r"^[\-\*\u2022]+\s*", "", line.strip())
+        return re.sub(r"[\-\*\u2022]+\s*", "", line.strip())
 
     def parse_bold_entities(block: str) -> Dict[str, str]:
         """Extracts **bold** entities and maps text until next bold or section."""
@@ -699,19 +699,18 @@ def parse_medical_report(text: str):
     }
 
 
-    # --- Executive Summary ---
+        # --- Executive Summary ---
     exec_match = re.search(r"###\s*Executive Summary(.*?)(?=###|$)", text, re.S | re.I)
     if exec_match:
         block = exec_match.group(1)
         priorities = re.findall(r"\d+\.\s*(.*?)\n", block)
         if priorities:
-            data["executive_summary"]["top_priorities"] = [clean_line(p) for p in priorities]
+            data["executive_summary"]["top_priorities"] =  priorities
         strengths_match = re.search(r"\*\*Key Strengths:\*\*(.*)", block, re.S)
         if strengths_match:
             strengths_text = strengths_match.group(1)
             strengths = [clean_line(s) for s in strengths_text.splitlines() if clean_line(s)]
             data["executive_summary"]["key_strengths"] = strengths
-
     # --- System Analysis ---
     # --- System Analysis (Fixed Keys) ---
     sys_match = re.search(r"###\s*System[- ]Specific Analysis(.*?)(?=###|$)", text, re.S | re.I)
@@ -722,6 +721,9 @@ def parse_medical_report(text: str):
             # match like: **Kidney Function Test** or *Kidney Function Test*
             pattern = rf"\*+\s*{re.escape(display_name)}\s*\*+(.*?)(?=\n\*|\Z)"
             found = re.search(pattern, sys_block, re.S | re.I)
+            if display_name=="Mineral & Heavy Metal":
+                pattern = rf"\*+\s*Mineral\s*&\s*Heavy\s*Metal\s*\*+(.*?)(?=\n\*|\Z)"
+                found = re.search(pattern, sys_block, re.S | re.I)
 
             if found:
                 extracted = clean_line(found.group(1))
@@ -789,22 +791,9 @@ def predict(data: BiomarkerRequest):
     try:
         # --- Prompt Template ---
         prompt = """
+
+You are an advanced **Medical Insight Generation AI** trained to analyze **biomarkers and lab results**.
 ------------------------------
-You are a medical summarization engine. You must strictly follow all rules.
-First: extract candidates internally without outputting them.
-Second: perform filtering to avoid overlap.
-Third: produce the JSON output.
-Never repeat any medical finding across sections.
-
-When mentioning any reference range in the entire response, ALWAYS write it exactly like this:
-- Use a hyphen (-) between numbers, NO space around it
-- Never concatenate numbers (030 instead of 0-30)
-- Never write 0.090.78 — always 0.09-0.78
-- Always include the unit after a space
-- Examples you MUST copy exactly:
-  → ref: 0-30 pg/mL
-
-This is extremely important for medical accuracy and parsing. Follow this rule everywhere in your response.
 
 ### Executive Summary
 **Top 3 Health Priorities:**
@@ -901,16 +890,4 @@ make it detailed
 
     except Exception as e:
 
-
         raise HTTPException(status_code=500, detail=f"Prediction error: {str(e)}")
-
-
-
-
-
-
-
-
-
-
-
