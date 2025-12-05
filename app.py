@@ -658,7 +658,7 @@ def parse_medical_report(text: str):
     Detects section headers, **bold keys**, and table entries.
     """
     def clean_line(line: str) -> str:
-        return re.sub(r"[\-\*\u2022]+\s*", "", line.strip())
+        return re.sub(r"[\*\u2022]+\s*", "", line.strip())
 
     def parse_bold_entities(block: str) -> Dict[str, str]:
         """Extracts **bold** entities and maps text until next bold or section."""
@@ -794,15 +794,6 @@ def predict(data: BiomarkerRequest):
 
 You are an advanced **Medical Insight Generation AI** trained to analyze **biomarkers and lab results**.
 ------------------------------
-CRITICAL FORMATTING RULE – NO EXCEPTIONS:
-
-Every reference range in your entire response MUST be written exactly like this:
-- Hyphen with NO spaces: 4.0-11.0
-- Never concatenate: 0-30 (correct), never 030
-- Never 0.090.78 → always 0.09-0.78
-- One space then unit: ref: 4.0-11.0 10^3/uL
-- Inequality examples
-
 ### Executive Summary
 **Top 3 Health Priorities:**
 1. ...
@@ -898,6 +889,4 @@ make it detailed
 
     except Exception as e:
 
-
         raise HTTPException(status_code=500, detail=f"Prediction error: {str(e)}")
-
