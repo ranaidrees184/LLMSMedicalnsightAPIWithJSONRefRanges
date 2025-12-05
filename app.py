@@ -705,7 +705,7 @@ def parse_medical_report(text: str):
         block = exec_match.group(1)
         priorities = re.findall(r"\d+\.\s*(.*?)\n", block)
         if priorities:
-            data["executive_summary"]["top_priorities"] =  priorities
+            data["executive_summary"]["top_priorities"]  = [clean_line(p) for p in priorities[:3]]
         strengths_match = re.search(r"\*\*Key Strengths:\*\*(.*)", block, re.S)
         if strengths_match:
             strengths_text = strengths_match.group(1)
@@ -794,6 +794,13 @@ def predict(data: BiomarkerRequest):
 
 You are an advanced **Medical Insight Generation AI** trained to analyze **biomarkers and lab results**.
 ------------------------------
+When mentioning any reference range in the entire response, ALWAYS write it exactly like this:
+- Use a hyphen (-) between numbers, NO space around it
+- Never concatenate numbers (030 instead of 0-30)
+- Never write 0.090.78 — always 0.09-0.78
+- Always include the unit after a space
+- Examples you MUST copy exactly:
+  → ref: 0-30 pg/mL
 
 ### Executive Summary
 **Top 3 Health Priorities:**
