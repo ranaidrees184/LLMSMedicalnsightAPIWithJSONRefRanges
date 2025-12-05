@@ -794,6 +794,7 @@ def predict(data: BiomarkerRequest):
 
 You are an advanced **Medical Insight Generation AI** trained to analyze **biomarkers and lab results**.
 ------------------------------
+This is Very Strict and important Rule Must Obey:
 When mentioning any reference range in the entire response, ALWAYS write it exactly like this:
 - Use a hyphen (-) between numbers, NO space around it
 - Never concatenate numbers (030 instead of 0-30)
@@ -896,5 +897,6 @@ make it detailed
         return cleaned_output
 
     except Exception as e:
+
 
         raise HTTPException(status_code=500, detail=f"Prediction error: {str(e)}")
