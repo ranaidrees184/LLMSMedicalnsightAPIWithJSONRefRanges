@@ -156,7 +156,7 @@ class BiomarkerRequest(BaseModel):
     tnf: float = Field(default=4.0, description="Tumor Necrosis Factor (pg/mL)")
     
     # ---------------- Immune Profile ----------------
-    ana: float = Field(default=1:50, description="ANA (titer)")
+    ana: float = Field(default=0.011, description="ANA (titer)")
     ige: float = Field(default=100.0, description="IgE (IU/mL)")
     igg: float = Field(default=10.0, description="IgG (g/L)")
     anti_ccp: float = Field(default=10.0, description="Anti-CCP (U/mL)")
@@ -165,7 +165,7 @@ class BiomarkerRequest(BaseModel):
     rnp: float = Field(default=3.0, description="RNP (AU/mL)")
     sm_antibodies: float = Field(default=0.4, description="Sm Antibodies (index)")
     anca: float = Field(default=0.5, description="ANCA (IU/mL)")
-    anti_ena: float = Field(default=1:10, description="Anti-ENA (titer)")
+    anti_ena: float = Field(default=0.09, description="Anti-ENA (titer)")
     il6: float = Field(default=3.0, description="IL-6 (pg/mL)")
     allergy_panel: float = Field(default=10.0, description="Comprehensive Allergy Profile (IgE & Food Sensitivity IgG)")
 
@@ -891,3 +891,4 @@ make it detailed
 
 
         raise HTTPException(status_code=500, detail=f"Prediction error: {str(e)}")
+
