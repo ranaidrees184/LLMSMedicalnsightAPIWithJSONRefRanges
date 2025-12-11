@@ -48,14 +48,14 @@ class BiomarkerRequest(BaseModel):
     uric_acid: float = Field(default=5.0, description="Uric Acid (S) in mg/dL")
     calcium: float = Field(default=9.5, description="Calcium (S) in mg/dL")
     phosphorus: float = Field(default=3.5, description="Phosphorus (S) in mg/dL")
-    sodium: float = Field(default=140.0, description="Sodium (S) in mEq/L")
-    potassium: float = Field(default=4.2, description="Potassium (S) in mEq/L")
-    chloride: float = Field(default=102.0, description="Chloride (S) in mEq/L")
+    sodium: float = Field(default=140.0, description="Sodium (S) in mmol/L")
+    potassium: float = Field(default=4.2, description="Potassium (S) in mmol/L")
+    chloride: float = Field(default=102.0, description="Chloride (S) in mmol/L")
     amylase: float = Field(default=70.0, description="Amylase (S) in U/L")
     lipase: float = Field(default=35.0, description="Lipase (S) in U/L")
-    bicarbonate: float = Field(default=24.0, description="Bicarbonate (S) in mEq/L")
+    bicarbonate: float = Field(default=24.0, description="Bicarbonate (S) in mmol/L")
     egfr: float = Field(default=100.0, description="Estimated GFR (S) in mL/min/1.73m²")
-    serum_osmolality: float = Field(default=290.0, description="Serum Osmolality (S) in mOsm/kg")
+    serum_osmolality: float = Field(default=290.0, description="Serum Osmolality (S) in mmol/kg")
     ionized_calcium: float = Field(default=1.25, description="Ionized Calcium (S) in mmol/L")
     
     # ---------------- Basic Check-up ----------------
@@ -78,7 +78,7 @@ class BiomarkerRequest(BaseModel):
     hdl: float = Field(default=50.0, description="HDL Direct (mg/dL)")
     cholesterol_hdl_ratio: float = Field(default=3.0, description="Cholesterol/HDL Ratio")
     triglycerides: float = Field(default=120.0, description="Triglycerides (mg/dL)")
-    apo_a1: float = Field(default=140.0, description="Apo A-1 (mg/dL)")
+    apo_a1: float = Field(default=60.0, description="Apo A-1 (umol/L)")
     apo_b: float = Field(default=70.0, description="Apo B (mg/dL)")
     apo_ratio: float = Field(default=0.5, description="Apo B : Apo A-1 ratio")
     
@@ -96,18 +96,18 @@ class BiomarkerRequest(BaseModel):
     total_bilirubin: float = Field(default=0.7, description="Total Bilirubin (mg/dL)")
     direct_bilirubin: float = Field(default=0.3, description="Direct Bilirubin (mg/dL)")
     indirect_bilirubin: float = Field(default=0.4, description="Indirect Bilirubin (mg/dL)")
-    ammonia: float = Field(default=35.0, description="Ammonia (NH3) (µmol/L)")
+    ammonia: float = Field(default=35.0, description="Ammonia (NH3) (µg/dL)")
     
     # ---------------- Cardiac Profile ----------------
     hs_crp: float = Field(default=1.0, description="High-Sensitivity CRP (mg/L)")
     ck: float = Field(default=150.0, description="Creatine Kinase (U/L)")
-    ck_mb: float = Field(default=20.0, description="CK-MB (U/L)")
+    ck_mb: float = Field(default=1.5, description="CK-MB (ng/mL)")
     homocysteine: float = Field(default=10.0, description="Homocysteine (µmol/L)")
     
     # ---------------- Mineral & Heavy Metal ----------------
     zinc: float = Field(default=90.0, description="Zinc (µg/dL)")
     copper: float = Field(default=100.0, description="Copper (µg/dL)")
-    selenium: float = Field(default=120.0, description="Selenium (µg/L)")
+    selenium: float = Field(default=500.0, description="Selenium (µg/L)")
     
     # ---------------- Iron Profile ----------------
     iron: float = Field(default=100.0, description="Iron (µg/dL)")
@@ -120,52 +120,52 @@ class BiomarkerRequest(BaseModel):
     
     # ---------------- Hormone Profile ----------------
     total_testosterone: float = Field(default=450.0, description="Total Testosterone (ng/dL)")
-    free_testosterone: float = Field(default=15.0, description="Free Testosterone (pg/mL)")
+    free_testosterone: float = Field(default=4.2, description="Free Testosterone (pg/mL)")
     estrogen: float = Field(default=60.0, description="Estrogen / Estradiol (pg/mL)")
-    progesterone: float = Field(default=1.0, description="Progesterone (ng/mL)")
+    progesterone: float = Field(default=0.7, description="Progesterone (ng/mL)")
     dhea_s: float = Field(default=250.0, description="DHEA-S (µg/dL)")
     shbg: float = Field(default=40.0, description="SHBG (nmol/L)")
-    lh: float = Field(default=5.0, description="LH (IU/L)")
-    fsh: float = Field(default=6.0, description="FSH (IU/L)")
+    lh: float = Field(default=15.0, description="LH (mIU/mL)")
+    fsh: float = Field(default=60.0, description="FSH (mIU/mL)")
     
     # ---------------- Thyroid Profile ----------------
     tsh: float = Field(default=2.0, description="TSH (µIU/mL)")
     free_t3: float = Field(default=3.2, description="Free T3 (pg/mL)")
     free_t4: float = Field(default=1.2, description="Free T4 (ng/dL)")
-    total_t3: float = Field(default=120.0, description="Total T3 (ng/dL)")
+    total_t3: float = Field(default=2.0, description="Total T3 (ng/mL)")
     total_t4: float = Field(default=8.0, description="Total T4 (µg/dL)")
     reverse_t3: float = Field(default=15.0, description="Reverse T3 (ng/dL)")
     tpo_ab: float = Field(default=5.0, description="Thyroid Antibodies – TPO Ab (IU/mL)")
-    tg_ab: float = Field(default=3.0, description="Thyroid Antibodies – TG Ab (IU/mL)")
+    tg_ab: float = Field(default=90.0, description="Thyroid Antibodies – TG Ab (IU/mL)")
     
     # ---------------- Adrenal / Stress / Other Hormones ----------------
     cortisol: float = Field(default=12.0, description="Cortisol (µg/dL)")
     acth: float = Field(default=25.0, description="ACTH (pg/mL)")
     igf1: float = Field(default=200.0, description="IGF-1 (ng/mL)")
     leptin: float = Field(default=10.0, description="Leptin (ng/mL)")
-    adiponectin: float = Field(default=10.0, description="Adiponectin (µg/mL)")
+    adiponectin: float = Field(default=4.0, description="Adiponectin (µg/mL)")
     
     # ---------------- Blood Marker Cancer Profile ----------------
     ca125: float = Field(default=20.0, description="CA125 (U/mL)")
     ca15_3: float = Field(default=25.0, description="CA15-3 (U/mL)")
     ca19_9: float = Field(default=30.0, description="CA19-9 (U/mL)")
-    psa: float = Field(default=1.0, description="PSA (ng/mL)")
+    psa: float = Field(default=2.0, description="PSA (ng/mL)")
     cea: float = Field(default=2.0, description="CEA (ng/mL)")
     calcitonin: float = Field(default=5.0, description="Calcitonin (pg/mL)")
     afp: float = Field(default=5.0, description="AFP (ng/mL)")
-    tnf: float = Field(default=2.0, description="Tumor Necrosis Factor (pg/mL)")
+    tnf: float = Field(default=4.0, description="Tumor Necrosis Factor (pg/mL)")
     
     # ---------------- Immune Profile ----------------
-    ana: float = Field(default=0.5, description="ANA (IU/mL)")
+    ana: float = Field(default=1:50, description="ANA (titer)")
     ige: float = Field(default=100.0, description="IgE (IU/mL)")
-    igg: float = Field(default=1200.0, description="IgG (mg/dL)")
+    igg: float = Field(default=10.0, description="IgG (g/L)")
     anti_ccp: float = Field(default=10.0, description="Anti-CCP (U/mL)")
-    dsdna: float = Field(default=0.5, description="dsDNA (IU/mL)")
-    ssa_ssb: float = Field(default=5.0, description="SSA/SSB (IU/mL)")
-    rnp: float = Field(default=1.0, description="RNP (IU/mL)")
-    sm_antibodies: float = Field(default=0.5, description="Sm Antibodies (IU/mL)")
+    dsdna: float = Field(default=3.0, description="dsDNA (U/mL)")
+    ssa_ssb: float = Field(default=3.0, description="SSA/SSB (U/mL)")
+    rnp: float = Field(default=3.0, description="RNP (AU/mL)")
+    sm_antibodies: float = Field(default=0.4, description="Sm Antibodies (index)")
     anca: float = Field(default=0.5, description="ANCA (IU/mL)")
-    anti_ena: float = Field(default=0.5, description="Anti-ENA (IU/mL)")
+    anti_ena: float = Field(default=1:10, description="Anti-ENA (titer)")
     il6: float = Field(default=3.0, description="IL-6 (pg/mL)")
     allergy_panel: float = Field(default=10.0, description="Comprehensive Allergy Profile (IgE & Food Sensitivity IgG)")
 
@@ -888,5 +888,6 @@ make it detailed
         return cleaned_output
 
     except Exception as e:
+
 
         raise HTTPException(status_code=500, detail=f"Prediction error: {str(e)}")
