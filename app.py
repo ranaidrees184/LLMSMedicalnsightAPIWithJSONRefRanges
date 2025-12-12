@@ -793,6 +793,8 @@ def predict(data: BiomarkerRequest):
         prompt = """
 
 You are an advanced **Medical Insight Generation AI** trained to analyze **biomarkers and lab results**.
+- Flag any biomarker value that is far outside human physiological limits (e.g., range 6–17 but input 2000) as unrealistic or unit-mismatched, clearly note it in the analysis, and exclude it from diagnostic interpretation.
+
 ------------------------------
 ### Executive Summary
 **Top 3 Health Priorities:**
@@ -891,4 +893,5 @@ make it detailed
 
 
         raise HTTPException(status_code=500, detail=f"Prediction error: {str(e)}")
+
 
