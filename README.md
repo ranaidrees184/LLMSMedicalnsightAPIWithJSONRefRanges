@@ -68,7 +68,7 @@ Curl/Postman: Send requests manually for validation.
 Input Style is As Follow:
 
 {
-  "id": "PT-DEVIATE-002", 
+  "id": "PT01",
   
   "age": 52,
   
@@ -136,7 +136,7 @@ Input Style is As Follow:
   
   "triglycerides": 120,
   
-  "apo_a1": 140,
+  "apo_a1": 60,
   
   "apo_b": 70,
   
@@ -174,7 +174,7 @@ Input Style is As Follow:
   
   "ck": 150,
   
-  "ck_mb": 20,
+  "ck_mb": 1.5,
   
   "homocysteine": 10,
   
@@ -182,7 +182,7 @@ Input Style is As Follow:
   
   "copper": 100,
   
-  "selenium": 120,
+  "selenium": 500,
   
   "iron": 100,
   
@@ -196,19 +196,19 @@ Input Style is As Follow:
   
   "total_testosterone": 450,
   
-  "free_testosterone": 15,
+  "free_testosterone": 4.2,
   
   "estrogen": 60,
   
-  "progesterone": 1,
+  "progesterone": 0.7,
   
   "dhea_s": 250,
   
   "shbg": 40,
   
-  "lh": 5,
+  "lh": 15,
   
-  "fsh": 6,
+  "fsh": 60,
   
   "tsh": 2,
   
@@ -216,7 +216,7 @@ Input Style is As Follow:
   
   "free_t4": 1.2,
   
-  "total_t3": 120,
+  "total_t3": 2,
   
   "total_t4": 8,
   
@@ -224,7 +224,7 @@ Input Style is As Follow:
   
   "tpo_ab": 5,
   
-  "tg_ab": 3,
+  "tg_ab": 90,
   
   "cortisol": 12,
   
@@ -234,7 +234,7 @@ Input Style is As Follow:
   
   "leptin": 10,
   
-  "adiponectin": 10,
+  "adiponectin": 4,
   
   "ca125": 20,
   
@@ -242,7 +242,7 @@ Input Style is As Follow:
   
   "ca19_9": 30,
   
-  "psa": 1,
+  "psa": 2,
   
   "cea": 2,
   
@@ -250,32 +250,31 @@ Input Style is As Follow:
   
   "afp": 5,
   
-  "tnf": 2,
+  "tnf": 4,
   
-  "ana": 0.5,
+  "ana": 0.011,
   
   "ige": 100,
   
-  "igg": 1200,
+  "igg": 10,
   
   "anti_ccp": 10,
   
-  "dsdna": 0.5,
+  "dsdna": 3,
   
-  "ssa_ssb": 5,
+  "ssa_ssb": 3,
   
-  "rnp": 1,
+  "rnp": 3,
   
-  "sm_antibodies": 0.5,
+  "sm_antibodies": 0.4,
   
   "anca": 0.5,
   
-  "anti_ena": 0.5,
+  "anti_ena": 0.09,
   
   "il6": 3,
   
   "allergy_panel": 10
-  
 }
 
 
